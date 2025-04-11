@@ -4,8 +4,8 @@
 // Initialise electronics
 MeDCMotor motor_L(M1);
 MeDCMotor motor_R(M2);
-MeLineFollower line_finder(PORT_1);
-MeColorSensor colorsensor_L(PORT_2);
+MeLineFollower line_finder(PORT_2);
+MeColorSensor colorsensor_L(PORT_1);
 MeColorSensor colorsensor_R(PORT_4);
 
 // Constant variables
@@ -62,7 +62,7 @@ void search_turn(int turn)
         // Go back to first place
         if (num == 80) {
             num = 0;
-            modulator = 0;
+            modifier = 0;
             
             while (num != 80) {
                 if (turn == 0) {
@@ -101,6 +101,7 @@ void loop()
     }
     // Line mode
     else {
+        int modifier;
         int sensor_state = line_finder.readSensors();
 
         switch (sensor_state)
@@ -115,7 +116,7 @@ void loop()
             w_turn = 0;
 
             // Modifier speed right wheel
-            int modifier = modulator;
+            modifier = modulator;
             
             // Add speed to right wheel to go back in track
             while (sensor_state == S1_IN_S2_OUT) {
@@ -131,7 +132,7 @@ void loop()
             w_turn = 1;
 
             // Modifier speed left wheel
-            int modifier = modulator;
+            modifier = modulator;
                 
             // Add speed to left wheel to go back in track
             while (sensor_state == S1_OUT_S2_IN) {
