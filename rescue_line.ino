@@ -14,6 +14,8 @@ const int mspeed = 200;
 // Variables
 int w_turn; // Where to turn -> 0: Left | 1 : Right
 int mode = 0; // 0 : Line following | 1 : Arena
+uint8_t colorresult_L;
+uint8_t colorresult_R;
 
 // Search line in turn when no line detected by sensors
 int search_turn(int turn)
@@ -124,8 +126,13 @@ void loop()
 
                     sensor_state = line_finder.readSensors();
                     num ++;
-
-                    if (num == 80) {
+                    
+                    if (num == 10) {
+                        colorresult_L = colorsensor_L.ColorIdentify();
+                        colorresult_R = colorsensor_R.ColorIdentify();
+                        if (colorresult_L == RED or colorresult_R == RED) {mode = 1; break;} // Active arena mode if red line detected
+                    }
+                    else if (num == 80) {
                         break;
                     }
                 }
