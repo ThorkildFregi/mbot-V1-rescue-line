@@ -11,6 +11,7 @@ MeColorSensor colorsensor_R(PORT_4);
 // Constant variables
 const int mspeed = 255;
 const float vspeed = 0.02;
+const float aspeed = 0.15;
 
 // Variables
 int w_turn; // Where to turn -> 0: Left | 1 : Right
@@ -24,6 +25,19 @@ int move(int distance)
     motor_L.run(-mspeed);
     motor_R.run(mspeed);
     int calculated_delay = static_cast<int>(distance/vspeed);
+    delay(calculated_delay);
+    motor_L.stop();
+    motor_R.stop();
+}
+
+// Turn at an angle
+int turn(float angle)
+{
+    int new_mspeed = mspeed;
+    if (angle < 0) {new_mspeed = -mspeed; angle = -angle;}
+    motor_L.run(new_mspeed);
+    motor_R.run(new_mspeed);
+    int calculated_delay = static_cast<int>(angle/aspeed);
     delay(calculated_delay);
     motor_L.stop();
     motor_R.stop();
