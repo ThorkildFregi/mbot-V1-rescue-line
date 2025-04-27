@@ -7,6 +7,7 @@ MeDCMotor motor_R(M2);
 MeLineFollower line_finder(PORT_2);
 MeColorSensor colorsensor_L(PORT_1);
 MeColorSensor colorsensor_R(PORT_4);
+MeUltrasonicSensor ultraSensor(PORT_3)
 
 // Constant variables
 const int mspeed = 255;
@@ -19,11 +20,17 @@ int mode = 0; // 0 : Line following | 1 : Arena
 uint8_t colorresult_L;
 uint8_t colorresult_R;
 
+// Lists
+int ball_detected[2];
+int dist_detected[55];
+
 // Move from a distance
 int move(int distance)
 {
-    motor_L.run(-mspeed);
-    motor_R.run(mspeed);
+    int new_mspeed = mspeed;
+    if (distance < 0) {new_mspeed = -mspeed; distance = -distance;}
+    motor_L.run(-new_mspeed);
+    motor_R.run(new_mspeed);
     int calculated_delay = static_cast<int>(distance/vspeed);
     delay(calculated_delay);
     motor_L.stop();
@@ -86,6 +93,39 @@ int search_turn(int turn)
     return 1;
 }
 
+// To avoid an obstacle on the road
+int avoid_obstacle()
+{
+    turn(60.0);
+    move(10.0);
+    turn(-60.0);
+    move(10.0);
+    turn(-60.0);
+    move(5.0);
+}
+
+// Push the ball in the corner
+int ball_in_corner(int ball)
+{
+    float angle = (55 - ball_detected[ball]) * 2
+
+    // Face the ball
+    turn(angle);
+    
+    // Verify that it face the ball and move to ball, then go back in place
+    if (abs(static_cast<int>(ultraSensor.distanceCm()) - dist_detected[ball_detected[ball]]) <= 5) {
+        move(15.0);
+        if (ultraSensor.distanceCm() <= 2.0) {
+            turn(40 - (210 - static_cast<int>(angle)));
+            move(15.0);
+            move(-15.0);
+            turn(-40 - (210 - static_cast<int>(angle)));
+            move(-15.0);
+            turn(-angle);
+        }
+    }
+}
+
 void setup()
 {
     Serial.begin(115200);
@@ -99,77 +139,104 @@ void loop()
 {
     // Arena mode
     if (mode == 1) {
-        motor_L.stop();
-        motor_R.stop();
+        move(10.0);
+
+        num_ball = 0
+        for (i=0; i=54; i++) {
+            dist_detected[i] == static_cast<int>(ultraSensor.distanceCm());
+
+            if (abs(dist_detected[i] - dist_detected[i-1]) >= 5) {
+                ball_detected[num_ball] == i;
+                num_ball ++;
+            }
+
+            turn(2.0);
+        }
+
+        // Push each detected ball in the corner
+        for (i=0; i=sizeof(ball_detected)-1; i++) {
+            ball_in_corner(i);
+        }
+
+        // Victory move
+        for (i=1; i=10; i++) {
+            if (n % 2 == 0) {turn(10.0);} else {turn(-10.0);}
+        }
     }
     // Line mode
     else {
-        int modifier;
         int sensor_state = line_finder.readSensors();
 
-        switch (sensor_state)
-        {
-        case S1_IN_S2_IN:
-            motor_L.run(-mspeed);
-            motor_R.run(mspeed);
-            break;
-        
-        case S1_IN_S2_OUT:
-            // If two sensors turn left
-            w_turn = 0;
-        
-            motor_L.run(-mspeed);
-            motor_R.run(mspeed + 10);
-            break;
-        
-        case S1_OUT_S2_IN:
-            // If two sensors turn right
-            w_turn = 1;
-        
-            motor_L.run(-mspeed - 10);
-            motor_R.run(mspeed);
-            break;
-        
-        case S1_OUT_S2_OUT:
-            // Result of the searching
-            int result;
+        if (ultraSensor.distanceCm() <= 15.0) {
+            avoid_obstacle();
+        }
+        else {
+            switch (sensor_state)
+            {
+            case S1_IN_S2_IN:
+                motor_L.run(-mspeed);
+                motor_R.run(mspeed);
+                break;
             
-            while (sensor_state == S1_OUT_S2_OUT) {
-                if (w_turn == 0) {
-                    result = search_turn(0); if (result == 1) {break;}
-                    result = search_turn(1); if (result == 1) {break;}
-                }
-                else {
-                    result = search_turn(1); if (result == 1) {break;}
-                    result = search_turn(0); if (result == 1) {break;}
-                }
-
-                int num = 0;
-
+            case S1_IN_S2_OUT:
+                // If two sensors turn left
+                w_turn = 0;
+            
+                motor_L.run(-mspeed);
+                motor_R.run(mspeed + 10);
+                break;
+            
+            case S1_OUT_S2_IN:
+                // If two sensors turn right
+                w_turn = 1;
+            
+                motor_L.run(-mspeed - 10);
+                motor_R.run(mspeed);
+                break;
+            
+            case S1_OUT_S2_OUT:
+                // Result of the searching
+                int result;
+                
                 while (sensor_state == S1_OUT_S2_OUT) {
-                    motor_L.run(-mspeed);
-                    motor_R.run(mspeed);
+                    if (w_turn == 0) {
+                        result = search_turn(0); if (result == 1) {break;}
+                        result = search_turn(1); if (result == 1) {break;}
+                    }
+                    else {
+                        result = search_turn(1); if (result == 1) {break;}
+                        result = search_turn(0); if (result == 1) {break;}
+                    }
+
+                    int num = 0;
+
+                    while (sensor_state == S1_OUT_S2_OUT) {
+                        motor_L.run(-mspeed);
+                        motor_R.run(mspeed);
+
+                        sensor_state = line_finder.readSensors();
+                        num ++;
+                        
+                        if (num == 10) {
+                            colorresult_L = colorsensor_L.ColorIdentify();
+                            colorresult_R = colorsensor_R.ColorIdentify();
+                            if (colorresult_L == RED or colorresult_R == RED) {mode = 1; break;} // Active arena mode if red line detected
+                        }
+                        else if (num == 80) {
+                            break;
+                        }
+                    }
+
+                    if (mode == 1) {break;}
 
                     sensor_state = line_finder.readSensors();
-                    num ++;
-                    
-                    if (num == 10) {
-                        colorresult_L = colorsensor_L.ColorIdentify();
-                        colorresult_R = colorsensor_R.ColorIdentify();
-                        if (colorresult_L == RED or colorresult_R == RED) {mode = 1; break;} // Active arena mode if red line detected
-                    }
-                    else if (num == 80) {
-                        break;
-                    }
                 }
+                
+                break;
 
-                sensor_state = line_finder.readSensors();
+            default:
+                break;
             }
-            
-            break;
-
-        default:
-            break;
         }
     }
 }
