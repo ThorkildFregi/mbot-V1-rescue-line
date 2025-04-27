@@ -9,13 +9,22 @@ MeColorSensor colorsensor_L(PORT_1);
 MeColorSensor colorsensor_R(PORT_4);
 
 // Constant variables
-const int mspeed = 200;
+const int mspeed = 255;
+const int vspeed = 0.068;
 
 // Variables
 int w_turn; // Where to turn -> 0: Left | 1 : Right
 int mode = 0; // 0 : Line following | 1 : Arena
 uint8_t colorresult_L;
 uint8_t colorresult_R;
+
+// Move from a distance
+int move(int distance)
+{
+    motor_L.run(-mspeed);
+    motor_R.run(mspeed);
+    delay(distance/vspeed);
+}
 
 // Search line in turn when no line detected by sensors
 int search_turn(int turn)
