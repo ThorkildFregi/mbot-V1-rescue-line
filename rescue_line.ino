@@ -10,7 +10,7 @@ MeColorSensor colorsensor_R(PORT_4);
 
 // Constant variables
 const int mspeed = 255;
-const int vspeed = 0.068;
+const float vspeed = 0.02;
 
 // Variables
 int w_turn; // Where to turn -> 0: Left | 1 : Right
@@ -23,7 +23,10 @@ int move(int distance)
 {
     motor_L.run(-mspeed);
     motor_R.run(mspeed);
-    delay(distance/vspeed);
+    int calculated_delay = static_cast<int>(distance/vspeed);
+    delay(calculated_delay);
+    motor_L.stop();
+    motor_R.stop();
 }
 
 // Search line in turn when no line detected by sensors
