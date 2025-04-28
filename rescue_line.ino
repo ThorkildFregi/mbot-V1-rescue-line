@@ -10,7 +10,7 @@ MeUltrasonicSensor ultraSensor(PORT_3);
 
 // Constant variables
 const int mspeed = 100;
-const float vspeed = 0.04;
+const float vspeed = 0.015;
 const float aspeed = 0.20;
 
 // Variables
