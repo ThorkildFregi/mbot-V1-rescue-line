@@ -5,20 +5,19 @@
 MeDCMotor motor_L(M1);
 MeDCMotor motor_R(M2);
 MeLineFollower line_finder(PORT_2);
-MeColorSensor colorsensor_L(PORT_1);
-MeColorSensor colorsensor_R(PORT_4);
-MeUltrasonicSensor ultraSensor(PORT_3)
+MeColorSensor colorsensor(PORT_1);
+MeUltrasonicSensor ultraSensor(PORT_3);
 
 // Constant variables
-const int mspeed = 255;
-const float vspeed = 0.02;
-const float aspeed = 0.15;
+const int mspeed = 100;
+const float vspeed = 0.04;
+const float aspeed = 0.20;
 
 // Variables
 int w_turn; // Where to turn -> 0: Left | 1 : Right
 int mode = 0; // 0 : Line following | 1 : Arena
-uint8_t colorresult_L;
-uint8_t colorresult_R;
+int obstacle_avoided = 0; // 0 : not avoided | 1 : already avoided
+uint8_t colorresult;
 
 // Lists
 int ball_detected[2];
@@ -107,7 +106,7 @@ int avoid_obstacle()
 // Push the ball in the corner
 int ball_in_corner(int ball)
 {
-    float angle = (55 - ball_detected[ball]) * 2
+    float angle = (55 - ball_detected[ball]) * 2;
 
     // Face the ball
     turn(angle);
@@ -131,17 +130,17 @@ void setup()
     Serial.begin(115200);
 
     // Initialise color sensor
-    colorsensor_L.SensorInit();
-    colorsensor_R.SensorInit();
+    colorsensor.SensorInit();
 }
 
 void loop()
 {
     // Arena mode
     if (mode == 1) {
-        move(10.0);
+        move(30.0);
 
-        num_ball = 0
+        int num_ball = 0;
+        int i;
         for (i=0; i=54; i++) {
             dist_detected[i] == static_cast<int>(ultraSensor.distanceCm());
 
@@ -154,21 +153,24 @@ void loop()
         }
 
         // Push each detected ball in the corner
-        for (i=0; i=sizeof(ball_detected)-1; i++) {
+        int j;
+        for (j=0; j=sizeof(ball_detected)-1; j++) {
             ball_in_corner(i);
         }
 
         // Victory move
-        for (i=1; i=10; i++) {
-            if (n % 2 == 0) {turn(10.0);} else {turn(-10.0);}
+        int h;
+        for (h=1; h=10; h++) {
+            if (h % 2 == 0) {turn(10.0);} else {turn(-10.0);}
         }
     }
     // Line mode
     else {
         int sensor_state = line_finder.readSensors();
 
-        if (ultraSensor.distanceCm() <= 15.0) {
+        if (ultraSensor.distanceCm() <= 15.0 and obstacle_avoided == 0) {
             avoid_obstacle();
+            obstacle_avoided = 1;
         }
         else {
             switch (sensor_state)
@@ -197,7 +199,12 @@ void loop()
             case S1_OUT_S2_OUT:
                 // Result of the searching
                 int result;
-                
+
+                motor_L.stop();
+                motor_R.stop();
+                colorresult = colorsensor.ColorIdentify();
+                if (colorresult == RED) {mode = 1; break;} // Active arena mode if red line detected
+    
                 while (sensor_state == S1_OUT_S2_OUT) {
                     if (w_turn == 0) {
                         result = search_turn(0); if (result == 1) {break;}
@@ -211,18 +218,21 @@ void loop()
                     int num = 0;
 
                     while (sensor_state == S1_OUT_S2_OUT) {
+                        if (num == 0) {
+                            motor_L.stop();
+                            motor_R.stop();
+                            colorresult = colorsensor.ColorIdentify();
+                            if (colorresult == RED) {mode = 1; break;} // Active arena mode if red line detected
+                        }
                         motor_L.run(-mspeed);
                         motor_R.run(mspeed);
 
                         sensor_state = line_finder.readSensors();
                         num ++;
+
+                        delay(10);
                         
-                        if (num == 10) {
-                            colorresult_L = colorsensor_L.ColorIdentify();
-                            colorresult_R = colorsensor_R.ColorIdentify();
-                            if (colorresult_L == RED or colorresult_R == RED) {mode = 1; break;} // Active arena mode if red line detected
-                        }
-                        else if (num == 80) {
+                        if (num == 40) {
                             break;
                         }
                     }
