@@ -11,11 +11,12 @@ MeUltrasonicSensor ultraSensor(PORT_3);
 // Constant variables
 const int mspeed = 100;
 const float vspeed = 0.015;
-const float aspeed = 0.1125;
+const float aspeed = 0.1179;
 
 // Variables
 int w_turn; // Where to turn -> 0: Left | 1 : Right
-int mode = 0; // 0 : Line following | 1 : Arena
+int mode = 1; // 0 : Line following | 1 : Arena
+int already_been_arena_mode = 0;
 int obstacle_avoided = 0; // 0 : not avoided | 1 : already avoided
 uint8_t colorresult;
 
@@ -103,26 +104,27 @@ int avoid_obstacle()
     move(5.0);
 }
 
-// Push the ball in the corner
-int ball_in_corner(int ball)
+int backyard_mode()
 {
-    float angle = (55 - ball_detected[ball]) * 2;
-
-    // Face the ball
-    turn(angle);
+    move(35.0);
+    turn(140.0);
+    move(10.0);
     
-    // Verify that it face the ball and move to ball, then go back in place
-    if (abs(static_cast<int>(ultraSensor.distanceCm()) - dist_detected[ball_detected[ball]]) <= 5) {
-        move(15.0);
-        if (ultraSensor.distanceCm() <= 2.0) {
-            turn(40 - (210 - static_cast<int>(angle)));
-            move(15.0);
-            move(-15.0);
-            turn(-40 - (210 - static_cast<int>(angle)));
-            move(-15.0);
-            turn(-angle);
-        }
-    }
+    turn(-110.0);
+    move(14.0);
+    turn(130.0);
+    move(14.0);
+        
+    turn(-120.0);
+    move(16.0);
+    turn(110.0);
+    move(14.0);
+
+    turn(-60.0);
+    move(13.0);
+    turn(-80.0);
+    move(14.0);
+    
 }
 
 void setup()
@@ -137,31 +139,13 @@ void loop()
 {
     // Arena mode
     if (mode == 1) {
-        move(30.0);
+        if (already_been_arena_mode == 0) {
+            already_been_arena_mode ++;
 
-        int num_ball = 0;
-        int i;
-        for (i=0; i=54; i++) {
-            dist_detected[i] == static_cast<int>(ultraSensor.distanceCm());
+            move(13.0);
+  
+            backyard_mode();
 
-            if (abs(dist_detected[i] - dist_detected[i-1]) >= 5) {
-                ball_detected[num_ball] == i;
-                num_ball ++;
-            }
-
-            turn(2.0);
-        }
-
-        // Push each detected ball in the corner
-        int j;
-        for (j=0; j=sizeof(ball_detected)-1; j++) {
-            ball_in_corner(i);
-        }
-
-        // Victory move
-        int h;
-        for (h=1; h=10; h++) {
-            if (h % 2 == 0) {turn(10.0);} else {turn(-10.0);}
         }
     }
     // Line mode
