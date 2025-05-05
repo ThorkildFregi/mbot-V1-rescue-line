@@ -10,8 +10,8 @@ MeUltrasonicSensor ultraSensor(PORT_3);
 
 // Constant variables
 const int mspeed = 100;
-const float vspeed = 0.015;
-const float aspeed = 0.1179;
+const float vspeed = 0.016;
+const float aspeed = 0.135;
 
 // Variables
 int w_turn; // Where to turn -> 0: Left | 1 : Right
@@ -96,33 +96,33 @@ int search_turn(int turn)
 // To avoid an obstacle on the road
 int avoid_obstacle()
 {
-    turn(60.0);
+    turn(90.0);
     move(10.0);
-    turn(-60.0);
+    turn(-90.0);
     move(10.0);
-    turn(-60.0);
+    turn(-90.0);
     move(5.0);
 }
 
 int backyard_mode()
 {
-    move(35.0);
+    move(40.0);
     turn(140.0);
-    move(10.0);
+    move(20.0);
     
     turn(-110.0);
-    move(14.0);
-    turn(130.0);
-    move(14.0);
+    move(20.0);
+    turn(110.0);
+    move(15.0);
         
-    turn(-120.0);
+    turn(-110.0);
     move(16.0);
     turn(110.0);
-    move(14.0);
+    move(9.0);
 
     turn(-60.0);
-    move(13.0);
-    turn(-80.0);
+    move(7.0);
+    turn(-90.0);
     move(14.0);
     
 }
@@ -142,7 +142,8 @@ void loop()
         if (already_been_arena_mode == 0) {
             already_been_arena_mode ++;
 
-            move(13.0);
+            turn(10.0);
+            move(16.0);
   
             backyard_mode();
 
