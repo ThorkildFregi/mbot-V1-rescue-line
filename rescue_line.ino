@@ -4,9 +4,15 @@
 // Initialise electronics
 MeDCMotor motor_L(M1);
 MeDCMotor motor_R(M2);
+MePort port(PORT_3);
 MeLineFollower line_finder(PORT_2);
 MeColorSensor colorsensor(PORT_1);
-MeUltrasonicSensor ultraSensor(PORT_3);
+MeUltrasonicSensor ultraSensor(PORT_4);
+
+// Create serv object
+Servo myservo1;
+int16_t servo1pin =  port.pin1();
+
 
 // Constant variables
 const int mspeed = 100;
@@ -113,7 +119,7 @@ int backyard_mode()
     turn(-110.0);
     move(20.0);
     turn(110.0);
-    move(15.0);
+    move(20.0);
         
     turn(-110.0);
     move(16.0);
@@ -130,6 +136,11 @@ int backyard_mode()
 void setup()
 {
     Serial.begin(115200);
+
+    // Attach pin to servo object and make servo at 0°
+    myservo1.attach(servo1pin);
+    myservo1.write(0);
+    delay(1000);
 
     // Initialise color sensor
     colorsensor.SensorInit();
