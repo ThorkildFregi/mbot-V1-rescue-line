@@ -140,7 +140,7 @@ void setup()
     // Attach pin to servo object and make servo at 0°
     myservo1.attach(servo1pin);
     myservo1.write(0);
-    delay(1000);
+    delay(2000);
 
     // Initialise color sensor
     colorsensor.SensorInit();
@@ -150,6 +150,8 @@ void loop()
 {
     // Arena mode
     if (mode == 1) {
+        myservo1.write(90);
+        delay(2000);
         if (already_been_arena_mode == 0) {
             already_been_arena_mode ++;
 
