@@ -16,10 +16,14 @@ Le robot part d'une base mbot V1. Il fonctionne avec, pour la partie suivi de li
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-La détection est assurée par le module de suivi de ligne.
+La détection de la ligne est assurée par le module de suivi de ligne.
 
 <img src="assets/linefollowing.jpg" alt="linefollowing" width="200"/>
 
-Ce module est composé de 2 capteurs qui vérifie si ils sont sur une ligne noir ou pas. Ainsi, ces capteurs sont utilisés pour vérifier si le robot est bien aligné avec la ligne. Si l'un des capteurs sort, le moteur du même côté que le capteur sortie accélère pour redresser le robot et le robot se prépare à un tournant du côté inverse du côté du capteur. Si les 2 capteurs sortent cela veut dire qu'il y a un tournant, ainsi le robot tourne dans le sens dans lequel il s'est préparé.
+Ce module est composé de 2 capteurs qui vérifie si ils sont sur une ligne noir ou pas. Ainsi, ces capteurs sont utilisés pour vérifier si le robot est bien aligné avec la ligne. Si l'un des capteurs sort, le moteur du même côté que le capteur sortie accélère pour redresser le robot et le robot se prépare à un tournant du côté inverse du côté du capteur. Si les 2 capteurs sortent cela veut dire qu'il y a un tournant, ainsi le robot tourne dans le sens dans lequel il s'est préparé. ([Voir ligne 174 à 257](rescue_line.ino))
 
-Le module de couleur
+Le module de détection couleur assure lui la détection de la ligne rouge finale.
+
+<img src="assets/colorsensor.png" alt="linefollowing" width="300"/>
+
+Ce module est lui aussi composé de 2 capteurs mais eux détectent les différentes teintes (RGB) des couleurs. Ce module au moment de passer cette ligne va détecter la couleur et fera passer le robot en mode Arène (voir 2.1 et fonctionnement de la partie finale). ([Voir ligne 222 et 223](rescue_line.ino))
