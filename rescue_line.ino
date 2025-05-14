@@ -21,7 +21,7 @@ const float aspeed = 0.135;
 
 // Variables
 int w_turn; // Where to turn -> 0: Left | 1 : Right
-int mode = 0; // 0 : Line following | 1 : Arena
+int mode = 1; // 0 : Line following | 1 : Arena
 int already_been_arena_mode = 0;
 int obstacle_avoided = 0; // 0 : not avoided | 1 : already avoided
 uint8_t colorresult;
@@ -110,27 +110,31 @@ int avoid_obstacle()
     move(5.0);
 }
 
-int backyard_mode()
+int arena_mode()
 {
-    move(40.0);
-    turn(140.0);
-    move(20.0);
-    
-    turn(-110.0);
-    move(20.0);
-    turn(110.0);
-    move(20.0);
-        
-    turn(-110.0);
-    move(16.0);
-    turn(110.0);
-    move(9.0);
+    int i = 0;
+    float distance;
+    while (i != 20) {
+        distance = ultraSensor.distanceCm();
+        turn(10);
+        if (abs(distance - ultraSensor.distanceCm()) >= 7.0) {
+            myservo1.write(30);
+            delay(2000);
+            
+            move(50.0);
+            
+            motor_L.run(mspeed);
+            motor_R.run(mspeed);
 
-    turn(-60.0);
-    move(7.0);
-    turn(-90.0);
-    move(14.0);
-    
+            delay(500);
+
+            motor_L.stop();
+            motor_R.stop();
+
+            i = 20;
+        }
+        i++;
+    }
 }
 
 void setup()
@@ -150,16 +154,12 @@ void loop()
 {
     // Arena mode
     if (mode == 1) {
-        myservo1.write(90);
-        delay(2000);
         if (already_been_arena_mode == 0) {
             already_been_arena_mode ++;
 
-            turn(10.0);
-            move(16.0);
-  
-            backyard_mode();
+            arena_mode();
 
+            while(1);
         }
     }
     // Line mode
