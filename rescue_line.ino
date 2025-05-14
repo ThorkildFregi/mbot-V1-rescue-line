@@ -20,7 +20,6 @@ const float aspeed = 0.135;
 // Variables
 int w_turn; // Where to turn -> 0: Left | 1 : Right
 int mode = 0; // 0 : Line following | 1 : Arena
-int already_been_arena_mode = 0;
 int obstacle_avoided = 0; // 0 : not avoided | 1 : already avoided
 uint8_t colorresult;
 
@@ -154,13 +153,9 @@ void loop()
 {
     // Arena mode
     if (mode == 1) {
-        if (already_been_arena_mode == 0) {
-            already_been_arena_mode ++;
+        arena_mode();
 
-            arena_mode();
-
-            while(1);
-        }
+        while(1);
     }
     // Line mode
     else {
