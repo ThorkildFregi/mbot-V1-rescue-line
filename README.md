@@ -44,4 +44,5 @@ Ce module est lui aussi composé de 2 capteurs mais eux détectent les différen
 
 Plusieurs difficultées ont été rencontrées. Le positionnement du module de détection des couleurs était complexe pour à la fois ne pas surélever le robot et le positionner au bon endroit. De plus, la détection prends beaucoup de temps il fallait donc la faire le moins possible, au bonne endroit, pile pour détecter à tous les coups sans perte dans la vitesse du robot.
 
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+## II - Récupération de la balle
+
