@@ -16,4 +16,6 @@ Le robot part d'une base mbot V1. Il fonctionne avec, pour la partie suivi de li
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-La détection est assurée par le capteur de suivi de ligne. C'est un
+La détection est assurée par le capteur de suivi de ligne.
+
+![Image capteur Line Following](/assets/linefollowing.jpg)
