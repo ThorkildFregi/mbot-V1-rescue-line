@@ -26,7 +26,7 @@ Le module de détection couleur assure, lui, la détection de la ligne rouge fin
 
 <img src="assets/colorsensor.png" alt="colorsensor" width="300"/>
 
-Ce module est lui aussi composé de 2 capteurs mais eux détectent les différentes teintes (RGB) des couleurs. Ce module au moment de passer la ligne finale va détecter la couleur et fera passer le robot en mode Arène ([voir 2.1](#1-principe-de-capture)). Il est positionné sur la gauche du robot. ([Voir ligne 222 et 223](rescue_line.ino#L222-L223))
+Ce module est lui aussi composé de 2 capteurs mais eux détectent les différentes teintes (RGB) des couleurs. Ce module au moment de passer la ligne finale va détecter la couleur et fera passer le robot en mode Arène ([voir 2.1](#1-principe-de-capture)). Il est positionné sur la gauche du robot. ([Voir ligne 217 et 218](rescue_line.ino#L217-L218))
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
