@@ -2,17 +2,15 @@
 #include "Wire.h"
 
 // Initialise electronics
+MePort port(PORT_3);
 MeDCMotor motor_L(M1);
 MeDCMotor motor_R(M2);
-MePort port(PORT_3);
 MeLineFollower line_finder(PORT_2);
 MeColorSensor colorsensor(PORT_1);
 MeUltrasonicSensor ultraSensor(PORT_4);
 
-// Create serv object
-Servo myservo1;
-int16_t servo1pin =  port.pin1();
-
+Servo myservo1; // Create servo object
+int16_t servo1pin =  port.pin1(); // Get pin servo
 
 // Constant variables
 const int mspeed = 100;
@@ -21,14 +19,10 @@ const float aspeed = 0.135;
 
 // Variables
 int w_turn; // Where to turn -> 0: Left | 1 : Right
-int mode = 1; // 0 : Line following | 1 : Arena
+int mode = 0; // 0 : Line following | 1 : Arena
 int already_been_arena_mode = 0;
 int obstacle_avoided = 0; // 0 : not avoided | 1 : already avoided
 uint8_t colorresult;
-
-// Lists
-int ball_detected[2];
-int dist_detected[55];
 
 // Move from a distance
 int move(int distance)
@@ -110,15 +104,20 @@ int avoid_obstacle()
     move(5.0);
 }
 
+// Final stade actions
 int arena_mode()
 {
     int i = 0;
     float distance;
     while (i != 20) {
+        // Get distance to the object in front of the bot
         distance = ultraSensor.distanceCm();
+        
         turn(10);
+        
+        // If the difference between the distance detected is too big then
         if (abs(distance - ultraSensor.distanceCm()) >= 7.0) {
-            myservo1.write(30);
+            myservo1.write(30); // Pliers down
             delay(2000);
             
             move(50.0);
@@ -143,7 +142,8 @@ void setup()
 
     // Attach pin to servo object and make servo at 0°
     myservo1.attach(servo1pin);
-    myservo1.write(0);
+    
+    myservo1.write(0); // Pliers up
     delay(2000);
 
     // Initialise color sensor
