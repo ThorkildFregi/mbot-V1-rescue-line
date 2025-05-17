@@ -47,5 +47,3 @@ Plusieurs difficultées ont été rencontrées. Le positionnement du module de d
 ## II - Récupération de la balle
 
 ### 1) Principe de capture
-
-***!!! EN COURS !!!***
