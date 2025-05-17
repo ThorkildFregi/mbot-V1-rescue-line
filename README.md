@@ -62,7 +62,7 @@ Le robot a deux modes, le mode ligne de base pour suivre la ligne, et le mode ar
 
 Une fois en mode arène, il fallait réfléchir à la façon de trouver la balle. D'abord partie sur une base de recherche de la balle à l'aveugle, après un peu de réflexion, nous nous sommes demandé comment la détecter. Là nous est venu l'idée de regarder la différence absolue entre deux prises de mesures, pendant que le robot tourne, du capteur ultrason pour voir si elle était significative. Si elle l'est ainsi cela veut dire qu'il y a une anomalie et dans notre cas cela est obligatoirement la balle. ([Voir ligne 118](rescue_line.ino#L118))
 
-Ainsi, une fois la balle détectée, le robot s'arrête de tourner sur lui-même et avance tout droit vers la balle pour la bloquer contre le mur du fond et tourne violemment vers la droite pour la rentrer directement dans le coin droit de l'arrivée. ([Voir ligne 119 à 130](rescue_line.ino#L119-130))
+Ainsi, une fois la balle détectée, le robot s'arrête de tourner sur lui-même et avance tout droit vers la balle pour la bloquer contre le mur du fond et tourne violemment vers la droite pour la rentrer directement dans le coin droit de l'arrivée. ([Voir ligne 119 à 130](rescue_line.ino#L119-L130))
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
