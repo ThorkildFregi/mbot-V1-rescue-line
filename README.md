@@ -20,7 +20,7 @@ La détection de la ligne est assurée par le module de suivi de ligne.
 
 <img src="assets/linefollowing.jpg" alt="linefollowing" width="200"/>
 
-Ce module est composé de 2 capteurs qui vérifie si ils sont sur une ligne noir ou pas. Ainsi, ces capteurs sont utilisés pour vérifier si le robot est bien aligné avec la ligne. Si l'un des capteurs sort, le moteur du même côté que le capteur sortie accélère pour redresser le robot et le robot se prépare à un tournant du côté inverse du côté du capteur. Si les 2 capteurs sortent cela veut dire qu'il y a un tournant, ainsi le robot tourne dans le sens dans lequel il s'est préparé. ([Voir ligne 169 à 241](rescue_line.ino#L169-L241))
+Ce module est composé de 2 capteurs qui vérifie si ils sont sur une ligne noir ou pas. Ainsi, ces capteurs sont utilisés pour vérifier si le robot est bien aligné avec la ligne. Si l'un des capteurs sort, le moteur du même côté que le capteur sortie accélère pour redresser le robot et le robot se prépare à un tournant du côté inverse du côté du capteur. Si les 2 capteurs sortent cela veut dire qu'il y a un tournant, ainsi le robot tourne dans le sens dans lequel il s'est préparé. ([Voir ligne 169 à 241](rescue_line.ino#L147-L221))
 
 Le module de détection couleur assure, lui, la détection de la ligne rouge finale.
 
@@ -50,7 +50,7 @@ Plusieurs difficultés ont été rencontrées. Le positionnement du module de d�
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-La pince a été faite pour être résistante, elle est donc plutôt épaisse et pas trop grande pour éviter d'avoir trop de poids. Une partie pour l'accrocher à l'avant du robot a été désigné, d'abord pour la rentrer dans les espaces adéquoits à l'avant mais pour une fonctionnalité expliqué plus tard ([pour comprendre le choix voir 2.4](#4-conclusion-1)), ensuite nous l'avons accroché à un servo moteur. La partie avant de la pince est assez longue pour récupérer la balle. ([Voir modélisation](pasdelien))
+La pince a été faite pour être résistante, elle est donc plutôt épaisse et pas trop grande pour éviter d'avoir trop de poids. Une partie pour l'accrocher à l'avant du robot a été désigné, d'abord pour la rentrer dans les espaces adéquoits à l'avant mais pour une fonctionnalité expliqué plus tard ([pour comprendre le choix voir 2.4](#4-conclusion-1)), ensuite nous l'avons accroché à un servo moteur. La partie avant de la pince est assez longue pour récupérer la balle. ([Voir modélisation](lienamettre))
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -58,11 +58,11 @@ La pince a été faite pour être résistante, elle est donc plutôt épaisse et
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Le robot a deux modes, le mode ligne de base pour suivre la ligne, et le mode arène pour capturer la balle. Comme dit avant une fois la ligne rouge détectée, le robot se met en mode arène. ([Voir ligne 217 et 218](rescue_line.ino#L217-L218))
+Le robot a deux modes, le mode ligne de base pour suivre la ligne, et le mode arène pour capturer la balle. Comme dit avant une fois la ligne rouge détectée, le robot se met en mode arène. ([Voir ligne 217 et 218](rescue_line.ino#L195-L196))
 
-Une fois en mode arène, il fallait réfléchir à la façon de trouver la balle. D'abord partie sur une base de recherche de la balle à l'aveugle, après un peu de réflexion, nous nous sommes demandé comment la détecter. Là nous est venu l'idée de regarder la différence absolue entre deux prises de mesures, pendant que le robot tourne, du capteur ultrason pour voir si elle était significative. Si elle l'est ainsi cela veut dire qu'il y a une anomalie et dans notre cas cela est obligatoirement la balle. ([Voir ligne 118](rescue_line.ino#L118))
+Une fois en mode arène, il fallait réfléchir à la façon de trouver la balle. D'abord partie sur une base de recherche de la balle à l'aveugle, après un peu de réflexion, nous nous sommes demandé comment la détecter. Là nous est venu l'idée de regarder la différence absolue entre deux prises de mesures, pendant que le robot tourne, du capteur ultrason pour voir si elle était significative. Si elle l'est ainsi cela veut dire qu'il y a une anomalie et dans notre cas cela est obligatoirement la balle. ([Voir ligne 118](rescue_line.ino#L107))
 
-Ainsi, une fois la balle détectée, le robot s'arrête de tourner sur lui-même et avance tout droit vers la balle pour la bloquer contre le mur du fond et tourne violemment vers la droite pour la rentrer directement dans le coin droit de l'arrivée. ([Voir ligne 119 à 130](rescue_line.ino#L119-L130))
+Ainsi, une fois la balle détectée, le robot s'arrête de tourner sur lui-même et avance tout droit vers la balle pour la bloquer contre le mur du fond et tourne violemment vers la droite pour la rentrer directement dans le coin droit de l'arrivée. ([Voir ligne 119 à 130](rescue_line.ino#L68-L86))
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -78,7 +78,7 @@ Ainsi, une fois la balle détectée, le robot s'arrête de tourner sur lui-même
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Une grosse difficulté a été rencontrée, comment mettre au même niveau que la balle le capteur à ultrason alors que la pince est dans le chemin. Cela a été réglé en ajoutant un servo moteur pour lever la pince. Aussi, il a fallu changer la mini roue à l'avant pour qu'elle tourne mieux et qu'elle arrête de se coincer entre les tuiles. Le comportement réel était surprenament très vite proche du comportement recherché.
+Une grosse difficulté a été rencontrée, comment mettre au même niveau que la balle le capteur à ultrason alors que la pince est dans le chemin. Cela a été réglé en ajoutant un servo moteur pour lever la pince. Aussi, il a fallu changer la mini roue à l'avant pour qu'elle tourne mieux et qu'elle arrête de se coincer entre les tuiles. Le comportement réel était surprenament très vite proche du comportement recherché. Mais le fait de rajouter le servomoteur pour levé et descendre la pince devait, soit utilisé trop d'énergies, soit trop de puissance, et donc faisait buggé le capteur ultrason. Pour le passage final, on a du donc ne pas utiliser la pince.
 
 ## III - Conclusion
 
