@@ -19,7 +19,7 @@ const float aspeed = 0.135;
 
 // Variables
 int w_turn; // Where to turn -> 0: Left | 1 : Right
-int mode = 1; // 0 : Line following | 1 : Arena
+int mode = 0; // 0 : Line following | 1 : Arena
 uint8_t colorresult;
 
 // Search line in turn when no line detected by sensors
@@ -104,7 +104,7 @@ int arena_mode()
 
         i++;
         // If the difference between the distance detected is too big then
-        if (abs(distance - ultraSensor.distanceCm()) >= 5.0) {
+        if (abs(distance - ultraSensor.distanceCm()) >= 7.0) {
             launch_ball();
             while(1);
         }
@@ -129,6 +129,14 @@ void loop()
 {
     // Arena mode
     if (mode == 1) {
+        motor_L.run(-mspeed);
+        motor_R.run(mspeed);
+
+        delay(2000);
+
+        motor_L.stop();
+        motor_R.stop();
+      
         arena_mode();
 
         while(1);
